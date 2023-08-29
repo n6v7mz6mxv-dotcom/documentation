@@ -8,7 +8,7 @@ FIRST_PORT=1481994
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 random() {
-	tr </dev/urandom -dc A-Za-z0-9 | head -c8
+	tr </dev/urandom -dc A-Za-z0-9 | head -c6
 	echo
 }
 
@@ -32,6 +32,17 @@ install_3proxy() {
     #chkconfig 3proxy on
     cd $WORKDIR
 }
+
+download_proxy() {
+local PASS=$(random)
+  cd /home/cloudfly
+  zip --password "$PASS" proxy.zip proxy.txt
+link=$(curl -s -F "file=@proxy.zip" https://file.io | awk -F '"' '{print $34}')
+rm -f proxy.zip
+  echo "Link Download Proxy: $link"
+  echo "Pass giải nén: {PASS}
+}
+
 gen_3proxy() {
     cat <<EOF
 daemon
@@ -124,4 +135,5 @@ chmod 0755 /etc/rc.local
 bash /etc/rc.local
 
 gen_proxy_file_for_user
+download_proxy
 echo "Starting Proxy"
