@@ -1,8 +1,8 @@
 
 # Tổng Proxy muốn tạo
-Proxy_Count=250
+read -p "Nhập Số Proxy muốn tạo (200-300 là hợp lý): " Proxy_Count
 # FIRST_PORT là 10001
-FIRST_PORT=1481994
+read -p "Nhập Port bất kì từ 10000 => 60000: " FIRST_PORT
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -40,7 +40,7 @@ local PASS=$(random)
 link=$(curl -s -F "file=@proxy.zip" https://file.io | awk -F '"' '{print $34}')
 rm -f proxy.zip
   echo "Link Download Proxy: $link"
-  echo "Pass giải nén: {PASS}
+  echo "Pass giải nén: ${PASS}"
 }
 
 gen_3proxy() {
