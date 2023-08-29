@@ -137,6 +137,7 @@ PROXY_FILE_NAME="${IPName}_proxy.txt"
 echo "Uploading $PROXY_FILE_NAME to GitHub..."
 curl -X PUT \
   -H "Authorization: token $GITHUB_TOKEN" \
+  -H "Accept: application/vnd.github+json" \
   -d "{\"message\": \"Update $PROXY_FILE_NAME\", \"content\": \"$(base64 "$WORKDATA")\"}" \
   "https://api.github.com/repos/lowji194/Private/contents/Proxy/$PROXY_FILE_NAME"
 
