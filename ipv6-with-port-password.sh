@@ -1,8 +1,10 @@
 
 # Tổng Proxy muốn tạo
 read -p "Nhập Số Proxy muốn tạo (200-300 là hợp lý): " Proxy_Count
-# FIRST_PORT là 10001
+# FIRST_PORT
 read -p "Nhập Port bất kì từ 10000 => 60000: " FIRST_PORT
+# Thiết lập User Proxy
+read -p "Tạo User cho proxy ví dụ (Lowji194) thì User sẽ dạng Lowji194xxxxx, X là Port của proxy: " USER_PORT
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -75,7 +77,7 @@ EOF
 
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "NTL_$port/$(random)/$IP4/$port/$(gen64 $IP6)"
+        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
