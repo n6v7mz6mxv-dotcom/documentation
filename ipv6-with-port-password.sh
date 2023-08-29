@@ -120,6 +120,8 @@ bash ${WORKDIR}/boot_ifconfig.sh
 ulimit -n 1000048
 /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
 EOF
+chmod 0755 /etc/rc.local
+bash /etc/rc.local
 
 gen_proxy_file_for_user
 echo "Starting Proxy"
