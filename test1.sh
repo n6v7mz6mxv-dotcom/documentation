@@ -1,8 +1,8 @@
 
 # Tổng Proxy muốn tạo
-Proxy_Count=250
+Proxy_Count=200
 # FIRST_PORT là 10001
-FIRST_PORT=14894
+FIRST_PORT=10001
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -21,7 +21,7 @@ gen64() {
 }
 install_3proxy() {
     echo "installing 3proxy"
-    URL="https://github.com/z3APA3A/3proxy/archive/3proxy-0.8.6.tar.gz"
+    URL="https://github.com/lowji194/documentation/raw/main/3proxy-3proxy-0.8.6.tar.gz"
     wget -qO- $URL | bsdtar -xvf-
     cd 3proxy-3proxy-0.8.6
     make -f Makefile.Linux
@@ -56,7 +56,11 @@ $(awk -F "/" '{print "auth strong\n" \
 "flush\n"}' ${WORKDATA})
 EOF
 }
-
+gen_proxy_file_for_user() {
+    cat >proxy.txt <<EOF
+$(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
+EOF
+}
 
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
@@ -120,6 +124,20 @@ EOF
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
 
-
+gen_proxy_file_for_user
 echo "Starting Proxy"
-download_proxy
+
+# Tải lên tập tin lên GitHub
+GITHUB_TOKEN="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"
+# Ghi đè biến IP4 với tên địa chỉ đã thay thế
+IPName="${IP4//./_}"
+
+PROXY_FILE_NAME="${IPName}_proxy.txt"
+
+echo "Uploading $PROXY_FILE_NAME to GitHub..."
+curl -X PUT \
+  -H "Authorization: token $GITHUB_TOKEN" \
+  -d "{\"message\": \"Update $PROXY_FILE_NAME\", \"content\": \"$(base64 "$WORKDATA")\"}" \
+  "https://api.github.com/repos/lowji194/Private/contents/Proxy/$PROXY_FILE_NAME"
+
+echo "$PROXY_FILE_NAME uploaded to GitHub."
