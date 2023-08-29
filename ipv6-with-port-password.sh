@@ -1,3 +1,9 @@
+
+# Tổng Proxy muốn tạo
+Proxy_Count=250
+# FIRST_PORT là 10001
+FIRST_PORT=10001
+
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -15,7 +21,7 @@ gen64() {
 }
 install_3proxy() {
     echo "installing 3proxy"
-    URL="https://github.com/z3APA3A/3proxy/archive/3proxy-0.8.6.tar.gz"
+    URL="https://github.com/lowji194/documentation/raw/main/3proxy-3proxy-0.8.6.tar.gz"
     wget -qO- $URL | bsdtar -xvf-
     cd 3proxy-3proxy-0.8.6
     make -f Makefile.Linux
@@ -25,10 +31,6 @@ install_3proxy() {
     #chmod +x /etc/init.d/3proxy
     #chkconfig 3proxy on
     cd $WORKDIR
-}
-download_proxy() {
-cd /home/cloudfly
-curl -F "file=@proxy.txt" https://file.io
 }
 gen_3proxy() {
     cat <<EOF
@@ -54,13 +56,6 @@ $(awk -F "/" '{print "auth strong\n" \
 "flush\n"}' ${WORKDATA})
 EOF
 }
-
-gen_proxy_file_for_user() {
-    cat >proxy.txt <<EOF
-$(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
-EOF
-}
-
 
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
@@ -102,17 +97,10 @@ IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-while :; do
-  read -p "Enter FIRST_PORT between 10000 and 60000: " FIRST_PORT
-  [[ $FIRST_PORT =~ ^[0-9]+$ ]] || { echo "Enter a valid number"; continue; }
-  if ((FIRST_PORT >= 10000 && FIRST_PORT <= 60000)); then
-    echo "OK! Valid number"
-    break
-  else
-    echo "Number out of range, try again"
-  fi
-done
-LAST_PORT=$(($FIRST_PORT + 300))
+# Tính toán giá trị LAST_PORT
+LAST_PORT=$((FIRST_PORT + (Proxy_Count - 1)))
+
+echo "FIRST_PORT is $FIRST_PORT"
 echo "LAST_PORT is $LAST_PORT. Continue..."
 
 gen_data >$WORKDIR/data.txt
@@ -131,7 +119,16 @@ EOF
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
 
-gen_proxy_file_for_user
-
 echo "Starting Proxy"
-download_proxy
+
+# Tải lên tập tin lên GitHub
+GITHUB_TOKEN="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"
+PROXY_FILE_NAME="${IP4}_proxy.txt"
+
+echo "Uploading $PROXY_FILE_NAME to GitHub..."
+curl -X PUT \
+  -H "Authorization: token $GITHUB_TOKEN" \
+  -d "{\"message\": \"Update $PROXY_FILE_NAME\", \"content\": \"$(base64 "$WORKDATA")\"}" \
+  "https://api.github.com/repos/lowji194/Private/contents/Proxy/$PROXY_FILE_NAME"
+
+echo "$PROXY_FILE_NAME uploaded to GitHub."
