@@ -1,10 +1,10 @@
 
 # Tổng Proxy muốn tạo
 Proxy_Count=300
-# FIRST_PORT
-FIRST_PORT=10001
 # Thiết lập User Proxy
 USER_PORT="User"
+# FIRST_PORT
+FIRST_PORT=10001
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
