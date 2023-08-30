@@ -41,6 +41,7 @@ local PASS=$(random)
   zip --password "$PASS" proxy.zip proxy.txt
 link=$(curl -s -F "file=@proxy.zip" https://file.io | awk -F '"' '{print $34}')
 rm -f proxy.zip
+  echo "Cấu hình Proxy Hoàn tất"
   echo "Link Download Proxy: $link"
   echo "Pass giải nén: ${PASS}"
 }
