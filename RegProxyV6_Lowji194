@@ -2,7 +2,7 @@
 # Tổng Proxy muốn tạo
 Proxy_Count=250
 # Thiết lập User Proxy
-USER_PORT="User"
+USER_PORT="NTL_"
 # FIRST_PORT
 FIRST_PORT=10001
 
