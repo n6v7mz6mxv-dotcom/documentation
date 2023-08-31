@@ -37,6 +37,8 @@ install_3proxy() {
 
 download_proxy() {
   echo "Cấu hình Proxy Hoàn tất"
+$(rm /root/RegProxyV6_Lowji194)
+$(rm -r /root/3proxy-0.9.4)
 }
 
 gen_3proxy() {
