@@ -36,6 +36,7 @@ install_3proxy() {
 }
 download_proxy() {
 echo "hoàn tất"
+sudo reboot
 }
 gen_3proxy() {
     cat <<EOF
