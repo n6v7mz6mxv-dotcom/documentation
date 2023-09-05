@@ -166,7 +166,6 @@ export_txt > proxy.txt
 
 upload_proxy() {
     echo "Tạo Proxy thành công! Định dạng IP:PORT:LOGIN:PASS"
-    echo "Tải Proxy tại: ${URL}"
 
 }
 upload_proxy
