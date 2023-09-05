@@ -63,7 +63,7 @@ gen_3proxy_cfg() {
 	echo flush
 	echo authcache user 86400
 	echo auth strong cache
-	echo users $USER_PORT:CL:$random
+	echo users $USER_PORT:CL:$(random)
 	echo allow $USER_PORT
 	
 	port=$FIRST_PORT
@@ -90,12 +90,17 @@ gen_ifconfig() {
 }
 
 export_txt(){
-	port=$FIRST_PORT
-	for ((i=1; i<=$MAXCOUNT; i++)); do
-		echo "$IP4:$port:$USER_PORT:$random"
-		((port+=1))
-	done
+    total_proxy=$((MAXCOUNT / 10))  # Tính toán số proxy cần xuất (1/10 của MAXCOUNT)
+    
+    # Tạo một dãy số port ngẫu nhiên không trùng lặp trong khoảng từ FIRST_PORT đến FIRST_PORT + MAXCOUNT
+    random_ports=($(shuf -i $FIRST_PORT-$((FIRST_PORT + MAXCOUNT - 1)) -n $total_proxy))
+    
+    for ((i=0; i<$total_proxy; i++)); do
+        random_port=${random_ports[$i]}
+        echo "$IP4:$random_port:$USER_PORT:$(random)"
+    done
 }
+
 
 
 if [ "x$(id -u)" != 'x0' ]; then
@@ -155,13 +160,11 @@ killall 3proxy
 service 3proxy start
 #
 echo "Export $IP4.txt"
-export_txt > $IP4.txt
+export_txt > $proxy.txt
 # upfile
 
 
 upload_proxy() {
-    URL=$(curl -s --upload-file $IP4.txt https://transfer.sh/$IP4.txt)
-
     echo "Tạo Proxy thành công! Định dạng IP:PORT:LOGIN:PASS"
     echo "Tải Proxy tại: ${URL}"
 
@@ -212,7 +215,7 @@ gen_3proxy_cfg() {
 	echo flush
 	echo authcache user 86400
 	echo auth strong cache
-	echo users $USER_PORT:CL:$random
+	echo users $USER_PORT:CL:$(random)
 	echo allow $USER_PORT
 	
 EOF
@@ -320,5 +323,6 @@ echo "Tạo cấu hình xoay.sh"
 history -c
 
 echo "Cấu hình xoay hoàn tất"
+sudo reboot
 
 
