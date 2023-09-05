@@ -63,8 +63,8 @@ gen_3proxy_cfg() {
 	echo flush
 	echo authcache user 86400
 	echo auth strong cache
-	echo users $USER_PORT:CL:$(random)
-	echo allow $USER_PORT
+	echo users ${USER_PORT}${port}:CL:$(random)
+	echo allow ${USER_PORT}${port}
 	
 	port=$FIRST_PORT
 	while read ip; do
@@ -97,7 +97,7 @@ export_txt(){
     
     for ((i=0; i<$total_proxy; i++)); do
         random_port=${random_ports[$i]}
-        echo "$IP4:$random_port:$USER_PORT:$(random)"
+        echo "$IP4:$random_port:${USER_PORT}${port}:$(random)"
     done
 }
 
@@ -160,7 +160,7 @@ killall 3proxy
 service 3proxy start
 #
 echo "Export $IP4.txt"
-export_txt > $proxy.txt
+export_txt > proxy.txt
 # upfile
 
 
@@ -215,8 +215,8 @@ gen_3proxy_cfg() {
 	echo flush
 	echo authcache user 86400
 	echo auth strong cache
-	echo users $USER_PORT:CL:$(random)
-	echo allow $USER_PORT
+	echo users ${USER_PORT}${port}:CL:$(random)
+	echo allow ${USER_PORT}${port}
 	
 EOF
 }
