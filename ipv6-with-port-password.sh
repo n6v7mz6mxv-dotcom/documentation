@@ -1,16 +1,8 @@
-
-# Tổng Proxy muốn tạo
-read -p "Nhập Số Proxy muốn tạo (200-300 là hợp lý): " Proxy_Count
-# FIRST_PORT
-read -p "Nhập Port bất kì từ 10000 => 60000: " FIRST_PORT
-# Thiết lập User Proxy
-read -p "Tạo User cho proxy ví dụ (Lowji194) thì User sẽ dạng Lowji194xxxxx, X là Port của proxy: " USER_PORT
-
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 random() {
-	tr </dev/urandom -dc A-Za-z0-9 | head -c6
+	tr </dev/urandom -dc A-Za-z0-9 | head -c5
 	echo
 }
 
@@ -23,9 +15,9 @@ gen64() {
 }
 install_3proxy() {
     echo "installing 3proxy"
-    URL="https://github.com/lowji194/documentation/raw/main/3proxy-3proxy-0.8.6.tar.gz"
+    URL="https://github.com/3proxy/3proxy/archive/refs/tags/0.9.4.tar.gz"
     wget -qO- $URL | bsdtar -xvf-
-    cd 3proxy-3proxy-0.8.6
+    cd 3proxy-3proxy-0.9.4
     make -f Makefile.Linux
     mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
     cp src/3proxy /usr/local/etc/3proxy/bin/
@@ -34,17 +26,10 @@ install_3proxy() {
     #chkconfig 3proxy on
     cd $WORKDIR
 }
-
 download_proxy() {
-local PASS=$(random)
-  cd /home/cloudfly
-  zip --password "$PASS" proxy.zip proxy.txt
-link=$(curl -s -F "file=@proxy.zip" https://file.io | awk -F '"' '{print $34}')
-rm -f proxy.zip
-  echo "Link Download Proxy: $link"
-  echo "Pass giải nén: ${PASS}"
+cd /home/cloudfly
+curl -F "file=@proxy.txt" https://file.io
 }
-
 gen_3proxy() {
     cat <<EOF
 daemon
@@ -69,15 +54,17 @@ $(awk -F "/" '{print "auth strong\n" \
 "flush\n"}' ${WORKDATA})
 EOF
 }
+
 gen_proxy_file_for_user() {
     cat >proxy.txt <<EOF
 $(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
 EOF
 }
 
+
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$(gen64 $IP6)"
+        echo "user$port/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
@@ -115,15 +102,23 @@ IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-# Tính toán giá trị LAST_PORT
-LAST_PORT=$((FIRST_PORT + (Proxy_Count - 1)))
-
-echo "FIRST_PORT is $FIRST_PORT"
+while :; do
+  read -p "Enter FIRST_PORT between 10000 and 60000: " FIRST_PORT
+  [[ $FIRST_PORT =~ ^[0-9]+$ ]] || { echo "Enter a valid number"; continue; }
+  if ((FIRST_PORT >= 10000 && FIRST_PORT <= 60000)); then
+    echo "OK! Valid number"
+    break
+  else
+    echo "Number out of range, try again"
+  fi
+done
+LAST_PORT=$(($FIRST_PORT + 750))
 echo "LAST_PORT is $LAST_PORT. Continue..."
 
 gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 
@@ -137,5 +132,6 @@ chmod 0755 /etc/rc.local
 bash /etc/rc.local
 
 gen_proxy_file_for_user
-download_proxy
+
 echo "Starting Proxy"
+download_proxy
