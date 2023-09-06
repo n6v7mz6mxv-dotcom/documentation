@@ -2,7 +2,7 @@
 # Tổng Proxy muốn tạo
 MAXCOUNT=1000
 # Thiết lập User Proxy
-USER_PORT="NTL_"
+USER_PORT="NTL"
 # FIRST_PORT
 FIRST_PORT=10001
 
