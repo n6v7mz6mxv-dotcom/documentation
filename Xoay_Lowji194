@@ -250,19 +250,17 @@ xoay_proxy2
 xoay_proxy3() {
 var=/root/xoay3.txt
     cat <<EOF >$var
-if ip -6 route get 2606:4700:4700::1111 &> /dev/null
-then
-	IP4="$IP4"
-	IP6="$IP6"
-	main_interface="eth0"
-	
+if ping6 -c 1 2606:4700:4700::1111 &> /dev/null; then
+    IP4="103.82.37.67"
+    IP6="2407:5b40:0:24f"
+    main_interface="eth0"
     echo "[OKE]: Thành công"
-    	echo "IPV4: $IP4"
-	echo "IPV6: $IP6"
-	echo "Mạng chính: $main_interface"
+    echo "IPV4: $IP4"
+    echo "IPV6: $IP6"
+    echo "Mạng chính: $main_interface"
 else
-    echo "[ERROR]:  thất bại!"
-	exit 1
+    echo "[ERROR]: thất bại!"
+    exit 1
 fi
 
 IFCFG="$main_interface" 
@@ -312,5 +310,3 @@ echo "Tạo cấu hình xoay.sh"
 history -c
 
 echo "Cấu hình xoay hoàn tất"
-
-
