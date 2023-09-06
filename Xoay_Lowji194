@@ -83,7 +83,7 @@ gen_iptables() {
 
 gen_ifconfig() {
 	while read line; do    
-		echo "ifconfig $IFCFG inet6 add $line/64"
+		echo "/sbin/ifconfig $IFCFG inet6 add $line/64"
 	done < $WORKDIR/ipv6.txt
 }
 
@@ -102,7 +102,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 #
 install_3proxy
-#service network restart
+/etc/init.d/named restart
 systemctl stop firewalld
 ulimit -n 65535
 yum -y install gcc net-tools bsdtar zip psmisc wget >/dev/null
@@ -155,7 +155,7 @@ bash $WORKDIR/boot_iptables.sh
 echo "3proxy Start"
 gen_3proxy_cfg > /etc/3proxy/3proxy.cfg
 killall 3proxy
-service 3proxy start
+/etc/init.d/3proxy start
 #
 echo "Export $IP4.txt"
 export_txt > proxy.txt
@@ -226,7 +226,7 @@ cat > xoay2.txt << "EOF"
 }
 gen_ifconfig() {
 	while read line; do    
-		echo "ifconfig $IFCFG inet6 add $line/64"
+		echo "/sbin/ifconfig $IFCFG inet6 add $line/64"
 	done < $WORKDIR/ipv6.txt
 }
 
@@ -236,7 +236,7 @@ if [ "x$(id -u)" != 'x0' ]; then
     exit 1
 fi
 
-service network restart
+/etc/init.d/named restart
 
 ulimit -n 65535
 
@@ -287,7 +287,7 @@ bash $WORKDIR/boot_ifconfig.sh
 echo "3proxy Start"
 gen_3proxy_cfg > /etc/3proxy/3proxy.cfg
 killall 3proxy
-service 3proxy start
+/etc/init.d/3proxy start
 
 echo "Đã Reset IP"
 EOF
