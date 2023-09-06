@@ -111,8 +111,7 @@ echo "Kiểm tra kết nối IPv6 ..."
 	IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 	main_interface=$(ip route get 8.8.8.8 | awk -- '{printf $5}')
 
-if ping6 -c3 icanhazip.com &> /dev/null
-then
+if ping6 -c 1 2606:4700:4700::1111 &> /dev/null; then
 	IP4="$IP4"
 	IP6="$IP6"
 	main_interface="$main_interface"
