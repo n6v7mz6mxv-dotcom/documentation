@@ -62,5 +62,4 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 echo "Xoay IP thành công"
-killall 3proxy
-bash /etc/rc.local
+/usr/bin/kill -HUP 3proxy
