@@ -62,4 +62,13 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 echo "Xoay IP thành công"
-/usr/bin/kill -HUP 3proxy
+# Kiểm tra nếu 3proxy đang chạy
+if pgrep 3proxy >/dev/null; then
+  echo "3proxy đang chạy, khởi động lại..."
+  /usr/bin/kill $(pgrep 3proxy) && bash /etc/rc.local
+else
+  echo "3proxy chưa chạy, khởi động 3proxy..."
+bash /etc/rc.local
+fi
+
+# Rest of your script...
