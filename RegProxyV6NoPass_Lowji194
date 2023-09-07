@@ -59,8 +59,14 @@ EOF
 }
 
 gen_proxy_file_for_user() {
-    cat >proxy.txt <<EOF
-$(awk -F "/" '{print $3 ":" $4 }' ${WORKDATA})
+cat > proxy.txt <<EOF
+$(awk -F "/" -v LAST_PORT="$LAST_PORT" '{
+    if ($4 <= LAST_PORT) {
+        print $3 ":" $4 ":" $1 ":" $2;
+    } else {
+        print $3 ":" $4 ":" $1 ":" $2 >> "ip4.txt";    # Ghi dòng vào ip4.txt
+    }
+}' ${WORKDATA})
 EOF
 }
 
@@ -69,11 +75,13 @@ gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
         echo "${USER_PORT}${port}/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
+	V4Port=$((LAST_PORT + 1))
+	echo "${USER_PORT}${V4Port}/$(random)/$IP4/$V4Port/$IP4"
 }
 
 gen_iptables() {
     cat <<EOF
-    $(awk -F "/" '{print "iptables -I INPUT -p tcp --dport " $4 "  -m state --state NEW -j ACCEPT"}' ${WORKDATA}) 
+$(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
 EOF
 }
 
