@@ -52,9 +52,17 @@ setuid 65535
 stacksize 6291456 
 flush
 
-$(awk -F "/" '{print "auth none\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
-"flush\n"}' ${WORKDATA})
+$(awk -F "/" '{
+    if ($3 != $5) {
+        print "proxy -6 -n -a -p" $4 " -i" $3 " -e" $5;
+        print "auth none";
+    } else {
+        print "users " $1 ":CL:" $2;
+        print "auth strong";
+        print "proxy -4 -n -a -p" $4 " -i" $3 " -e" $5;
+    }
+    print "flush";
+}' ${WORKDATA})
 EOF
 }
 
