@@ -54,8 +54,8 @@ flush
 
 $(awk -F "/" '{
     if ($3 != $5) {
-        print "proxy -6 -n -a -p" $4 " -i" $3 " -e" $5;
         print "auth none";
+        print "proxy -6 -n -a -p" $4 " -i" $3 " -e" $5;
     } else {
         print "users " $1 ":CL:" $2;
         print "auth strong";
