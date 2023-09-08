@@ -15,7 +15,10 @@ gen_data() {
     while IFS=":" read -r col1 col2 col3 col4; do
         generated_ip6=$(gen64 $IP6)
         echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
-    done < proxy.txt
+    done < root/proxy.txt
+    while IFS=":" read -r col1 col2 col3 col4; do
+        echo "${col3}/${col4}/${col1}/${col2}/${col1}"
+    done < root/ip4.txt
 }
 gen_3proxy() {
     cat <<EOF
@@ -33,15 +36,21 @@ stacksize 6291456
 flush
 auth strong
 
-$(awk -F "/" '{print "users " $1 ":CL:" $2 "\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
-"flush\n"}' ${WORKDATA})
+$(awk -F "/" '{
+    print "users " $1 ":CL:" $2;
+    if ($3 != $5) {
+        print "proxy -6 -n -a -p" $4 " -i" $3 " -e" $5;
+    } else {
+        print "proxy -4 -n -a -p" $4 " -i" $3 " -e" $5;
+    }
+    print "flush";
+}' ${WORKDATA})
 EOF
 }
 
 gen_ifconfig() {
     cat <<EOF
-$(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
 EOF
 }
 gen_iptables() {
