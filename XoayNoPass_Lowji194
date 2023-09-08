@@ -14,11 +14,11 @@ IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 gen_data() {
     while IFS=":" read -r col1 col2 col3 col4; do
         generated_ip6=$(gen64 $IP6)
-        echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
-    done < root/proxy.txt
+        echo "null/null/${col1}/${col2}/${generated_ip6}"
+    done < /root/proxy.txt
     while IFS=":" read -r col1 col2 col3 col4; do
         echo "${col3}/${col4}/${col1}/${col2}/${col1}"
-    done < root/ip4.txt
+    done < /root/ip4.txt
 }
 gen_3proxy() {
     cat <<EOF
@@ -37,10 +37,12 @@ flush
 auth strong
 
 $(awk -F "/" '{
-    print "users " $1 ":CL:" $2;
     if ($3 != $5) {
+        print "auth none";
         print "proxy -6 -n -a -p" $4 " -i" $3 " -e" $5;
     } else {
+        print "users " $1 ":CL:" $2;
+        print "auth strong";
         print "proxy -4 -n -a -p" $4 " -i" $3 " -e" $5;
     }
     print "flush";
