@@ -66,12 +66,12 @@ EOF
 }
 
 gen_proxy_file_for_user() {
-cat > root/proxy.txt <<EOF
+cat > /root/proxy.txt <<EOF
 $(awk -F "/" -v LAST_PORT="$LAST_PORT" '{
     if ($4 <= LAST_PORT) {
         print $3 ":" $4 ":" $1 ":" $2;
     } else {
-        print $3 ":" $4 ":" $1 ":" $2 > "root/ip4.txt";    # Ghi dòng vào ip4.txt
+        print $3 ":" $4 ":" $1 ":" $2 > "/root/ip4.txt";    # Ghi dòng vào ip4.txt
     }
 }' ${WORKDATA})
 EOF
