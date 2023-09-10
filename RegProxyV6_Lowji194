@@ -73,11 +73,7 @@ gen_proxy_file_for_user() {
 cat > /root/proxy.txt <<EOF
 $(awk -F "/" -v LAST_PORT="$LAST_PORT" -v PASS="$PASS" '{
     if ($4 <= LAST_PORT) {
-        output = $3 ":" $4;
-		if (PASS == 1) {
-        output = output ":" $1 ":" $2;
-		}
-        print output;
+		print $3 ":" $4 ":" $1 ":" $2
     } else {
         print $3 ":" $4 ":" $1 ":" $2 > "/root/ip4.txt";    # Ghi dòng vào ip4.txt
     }
