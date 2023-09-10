@@ -37,6 +37,7 @@ install_3proxy() {
     cd $WORKDIR
 }
 download_proxy() {
+echo "$PASS" > "${WORKDIR}/pass.txt"
 echo "hoàn tất"
 }
 gen_3proxy() {
