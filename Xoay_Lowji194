@@ -78,13 +78,9 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 echo "Xoay IP thành công"
-# Kiểm tra nếu 3proxy đang chạy
+
 if pgrep 3proxy >/dev/null; then
   echo "3proxy đang chạy, khởi động lại..."
-  /usr/bin/kill $(pgrep 3proxy) && bash /etc/rc.local
-else
-  echo "3proxy chưa chạy, khởi động 3proxy..."
-bash /etc/rc.local
+  /usr/bin/kill $(pgrep 3proxy)
 fi
-
-# Rest of your script...
+bash /home/cloudfly/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
