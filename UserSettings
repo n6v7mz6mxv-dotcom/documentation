@@ -36,9 +36,3 @@ WORKDATA="${WORKDIR}/data.txt"
 echo "$PASS" > "${WORKDIR}/pass.txt"
 
 gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
-
-if pgrep 3proxy >/dev/null; then
-  echo "3proxy đang chạy, khởi động lại..."
-  /usr/bin/kill $(pgrep 3proxy)
-fi
-ulimit -n 1000048 && /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
