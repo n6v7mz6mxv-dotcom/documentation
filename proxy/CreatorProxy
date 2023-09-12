@@ -8,21 +8,6 @@ PROFILE="lowji"
 #
 PASS=1
 
-echo "working folder = /home/Lowji194"
-WORKDIR="/home/Lowji194"
-WORKSET="${WORKDIR}/settings"
-WORKDATA="${WORKSET}/${PROFILE}/${PROFILE}.txt"
-mkdir $WORKDIR && cd $_
-mkdir $WORKSET
-mkdir $WORKSET/$PROFILE
-
-FILE="${WORKSET}/first.txt"
-if [ -e "$FILE" ]; then
-    FIRST_PORT=$(cat "$FILE")
-else
-    FIRST_PORT=10001
-fi
-
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -130,6 +115,20 @@ IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
+echo "working folder = /home/Lowji194"
+WORKDIR="/home/Lowji194"
+WORKSET="${WORKDIR}/settings"
+WORKDATA="${WORKSET}/${PROFILE}/${PROFILE}.txt"
+mkdir $WORKDIR && cd $_
+mkdir $WORKSET
+mkdir $WORKSET/$PROFILE
+
+FILE="${WORKSET}/first.txt"
+if [ -e "$FILE" ]; then
+    FIRST_PORT=$(cat "$FILE")
+else
+    FIRST_PORT=10001
+fi
 
 
 LAST_PORT=$(($FIRST_PORT + (Proxy_Count - 1)))
