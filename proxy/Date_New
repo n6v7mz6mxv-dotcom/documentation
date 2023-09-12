@@ -36,7 +36,6 @@ SendSms() {
 if [ "$days_remaining" -eq 3 ]; then
     SendSms "$ID_Khach" "Proxy của bạn sẽ hết hạn sau: $days_remaining ngày" # ID_Seller
 	SendSms "$ID_Seller" "Proxy VPS $Info sẽ hết hạn sau: $days_remaining ngày"
-	fi
 elif [ "$days_remaining" -eq 0 ]; then
     SendSms "$ID_Khach" "Proxy của bạn đã bị khoá do hết hạn" && mv /usr/local/etc/LowjiConfig/${Names}.cfg /usr/local/etc/LowjiConfig/${Names}_Expires.cfg && sudo reboot
 	SendSms "$ID_Seller" "Đã khoá proxy VPS: $Info"
@@ -49,8 +48,9 @@ fi
 
 Delete_proxy() {
     # Đường dẫn đến tệp A và B
-    ifconfig="/home/Lowji194/boot_ifconfig.sh"
-    Userdata="/home/Lowji194/settings/${Names}/${Names}.temp"
+	WORKDIR="/home/Lowji194"
+    ifconfig="${WORKDIR}/boot_ifconfig.sh"
+    Userdata="${WORKDIR}/settings/${Names}/${Names}.temp"
 
     # Tạo một tệp tạm thời để lưu kết quả
     temp_file_ifconfig=$(mktemp)
@@ -71,7 +71,7 @@ Delete_proxy() {
     mv "$temp_file_ifconfig" "$ifconfig"
 
     # Đường dẫn đến tệp A và B
-    iptables="/home/Lowji194/boot_ifconfig.sh"
+    iptables="/home/Lowji194/boot_iptables.sh"
 
     # Tạo một tệp tạm thời để lưu kết quả
     temp_file_iptables=$(mktemp)
@@ -91,5 +91,5 @@ Delete_proxy() {
     # Ghi lại kết quả vào tệp A
     mv "$temp_file_iptables" "$iptables"
 
-    rm -f "/usr/local/etc/LowjiConfig/${Names}_Expires.cfg" && rm "$0" # Thực hiện lệnh xoá dữ liệu ở đây
+    rm -f "/usr/local/etc/LowjiConfig/${Names}_Expires.cfg" && rm -rf ${WORKDIR}/settings/${Names} && rm ./$Names.txt && rm "$0" # Thực hiện lệnh xoá dữ liệu ở đây
 }
