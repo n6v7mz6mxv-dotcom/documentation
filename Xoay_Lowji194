@@ -76,11 +76,11 @@ fi
 gen_data >$WORKDIR/data.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
-gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
+gen_3proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 echo "Xoay IP thành công"
 
 if pgrep 3proxy >/dev/null; then
   echo "3proxy đang chạy, khởi động lại..."
   /usr/bin/kill $(pgrep 3proxy)
 fi
-bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
+bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
