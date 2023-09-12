@@ -38,10 +38,10 @@ if [ "$days_remaining" -eq 3 ]; then
 	SendSms "$ID_Seller" "Proxy VPS $Info sẽ hết hạn sau: $days_remaining ngày"
 	fi
 elif [ "$days_remaining" -eq 0 ]; then
-    SendSms "$ID_Khach" "Proxy của bạn đã bị khoá do hết hạn" && mv /usr/local/etc/LowjiConfig/${Names}.cfg /usr/local/etc/LowjiConfig/${Names}_Expires.cfg
+    SendSms "$ID_Khach" "Proxy của bạn đã bị khoá do hết hạn" && mv /usr/local/etc/LowjiConfig/${Names}.cfg /usr/local/etc/LowjiConfig/${Names}_Expires.cfg && sudo reboot
 	SendSms "$ID_Seller" "Đã khoá proxy VPS: $Info"
 elif [ "$days_remaining" -lt -6 ]; then
-    SendSms "$ID_Khach" "Proxy của bạn đã bị xoá do quá hạn 7 ngày" && rm -f /usr/local/etc/LowjiConfig/${Names}_Expires.cfg && rm "$0" # Thực hiện lệnh xoá dữ liệu ở đây
+    SendSms "$ID_Khach" "Proxy của bạn đã bị xoá do quá hạn 7 ngày"  && Delete_proxy
 	SendSms "$ID_Seller" "Proxy VPS: $Info đã bị xoá do quá 7 ngày k gia hạn"
 else
     SendSms "Số ngày còn lại: $days_remaining ngày"
