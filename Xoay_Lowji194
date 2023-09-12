@@ -62,7 +62,7 @@ EOF
 }
 
 
-WORKDIR="/home/cloudfly"
+WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
 # Kiểm tra xem file tồn tại hay không
 if [ -e "${WORKDIR}/pass.txt" ]; then
@@ -83,4 +83,4 @@ if pgrep 3proxy >/dev/null; then
   echo "3proxy đang chạy, khởi động lại..."
   /usr/bin/kill $(pgrep 3proxy)
 fi
-bash /home/cloudfly/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
+bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/3proxy/bin/3proxy /usr/local/etc/3proxy/3proxy.cfg
