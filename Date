@@ -2,6 +2,8 @@ Hansudung="2023-10-12"
 ID_Seller="null"
 ID_Khach="null"
 Names="null"
+TOKEN="null"
+
 
 # Lấy ngày hiện tại (định dạng YYYY-MM-DD)
 current_date=$(date +"%Y-%m-%d")
@@ -22,12 +24,13 @@ days_remaining=$((seconds_remaining / 86400))
 
 # Hàm gửi tin nhắn
 SendSms() {
-	TELEGRAM_BOT_TOKEN="6463546785:AAFbNWGRBRKPWjr37s7ZO3Xrj8n9TU2yhDE"
 	CHAT_ID="$1"
     MESSAGE="$2"
+    if [ "$TOKEN" != "null" ]; then
     if [ "$CHAT_ID" != "null" ]; then
-        curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${MESSAGE}"
+        curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${MESSAGE}"
     fi
+fi
 }
 
 # Kiểm tra xem nếu số ngày còn lại là số âm hoặc bằng 0
