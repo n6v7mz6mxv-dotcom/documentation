@@ -84,13 +84,13 @@ gen_data() {
 }
 
 gen_iptables() {
-cat >> $WORKSET/$PROFILE/$PROFILE.temp <<EOF
+    cat <<EOF
     $(awk -F "/" '{print "iptables -I INPUT -p tcp --dport " $4 "  -m state --state NEW -j ACCEPT"}' ${WORKDATA}) 
 EOF
 }
 
 gen_ifconfig() {
-cat >> $WORKSET/$PROFILE/$PROFILE.temp <<EOF
+    cat <<EOF
 $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
