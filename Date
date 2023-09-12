@@ -1,0 +1,33 @@
+Hansudung="2023-09-4"
+
+# Lấy ngày hiện tại (định dạng YYYY-MM-DD)
+current_date=$(date +"%Y-%m-%d")
+
+# Chuyển đổi ngày/tháng/năm hiện tại và ngày hết hạn thành định dạng số Unix
+current_unix=$(date -d "$current_date" +"%s")
+Hansudung=$(date -d "$expiry_date" +"%s")
+
+# Tính số giây còn lại
+seconds_remaining=$((Hansudung - current_unix))
+
+# Tính số ngày còn lại bằng cách chia số giây cho 86400 (số giây trong một ngày)
+days_remaining=$((seconds_remaining / 86400))
+
+# Hàm gửi tin nhắn
+SendSms() {
+	TELEGRAM_BOT_TOKEN="6463546785:AAFbNWGRBRKPWjr37s7ZO3Xrj8n9TU2yhDE"
+	CHAT_ID="5013440124"
+    MESSAGE="$1"
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${MESSAGE}"
+}
+
+# Kiểm tra xem nếu số ngày còn lại là số âm hoặc bằng 0
+if [ "$days_remaining" -eq 3 ]; then
+    SendSms "Proxy của bạn sẽ hết hạn sau: $days_remaining ngày"
+elif [ "$days_remaining" -eq 0 ]; then
+    SendSms "Proxy của bạn đã bị khoá do hết hạn"
+elif [ "$days_remaining" -lt -6 ]; then
+    SendSms "Proxy của bạn đã bị xoá do quá hạn 7 ngày" && rm "$0" # Thực hiện lệnh xoá dữ liệu ở đây
+else
+    echo "Số ngày còn lại: $days_remaining ngày"
+fi
