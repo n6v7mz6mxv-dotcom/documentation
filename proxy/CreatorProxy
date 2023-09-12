@@ -140,7 +140,7 @@ cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
 ulimit -n 1000048
-EOF
+# Bắt đầu đoạn mã kiểm tra và thực thi StartProxy
 
 # Đường dẫn đến tệp lệnh StartProxy
 start_proxy_cmd="/usr/local/etc/LowjiConfig/bin/StartProxy"
@@ -148,12 +148,14 @@ start_proxy_cmd="/usr/local/etc/LowjiConfig/bin/StartProxy"
 # Vòng lặp qua tất cả các tệp cấu hình .cfg
 for cfg_file in /usr/local/etc/LowjiConfig/*.cfg; do
     # Kiểm tra và thực thi lệnh cho từng tệp
-    if [ -f "$cfg_file" ]; then
-        $start_proxy_cmd "$cfg_file" || true
+    if [ -f "\$cfg_file" ]; then
+        "\$start_proxy_cmd" "\$cfg_file" || true
     else
-        echo "Tệp $cfg_file không tồn tại. Bỏ qua."
+        echo "Tệp \$cfg_file không tồn tại. Bỏ qua."
     fi
-done >> /etc/rc.local
+done
+EOF
+
 
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
