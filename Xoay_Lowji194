@@ -20,7 +20,7 @@ gen_data() {
         echo "${col3}/${col4}/${col1}/${col2}/${col1}"
     done < /root/ip4.txt
 }
-gen_3proxy() {
+gen_proxy() {
     cat <<EOF
 daemon
 maxconn 2000
@@ -76,7 +76,7 @@ fi
 gen_data >$WORKDIR/data.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
-gen_3proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
+gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 echo "Xoay IP thành công"
 
 if pgrep 3proxy >/dev/null; then
