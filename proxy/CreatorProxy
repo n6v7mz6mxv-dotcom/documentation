@@ -84,13 +84,13 @@ gen_data() {
 }
 
 gen_iptables() {
-    cat <<EOF
+cat >> $WORKSET/$PROFILE/$PROFILE.temp <<EOF
     $(awk -F "/" '{print "iptables -I INPUT -p tcp --dport " $4 "  -m state --state NEW -j ACCEPT"}' ${WORKDATA}) 
 EOF
 }
 
 gen_ifconfig() {
-    cat <<EOF
+cat >> $WORKSET/$PROFILE/$PROFILE.temp <<EOF
 $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
@@ -131,7 +131,6 @@ echo "LAST_PORT is $LAST_PORT. Continue..."
 gen_data >$WORKSET/$PROFILE/$PROFILE.txt
 gen_iptables >>$WORKDIR/boot_iptables.sh
 gen_ifconfig >>$WORKDIR/boot_ifconfig.sh
-cat $WORKDIR/boot_ifconfig.sh $WORKDIR/boot_iptables.sh > $WORKSET/$PROFILE/$PROFILE.temp
 
 
 gen_proxy >/usr/local/etc/LowjiConfig/$PROFILE.cfg
