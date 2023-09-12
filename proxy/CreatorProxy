@@ -147,13 +147,23 @@ start_proxy_cmd="/usr/local/etc/LowjiConfig/bin/StartProxy"
 
 # Vòng lặp qua tất cả các tệp cấu hình .cfg
 for cfg_file in /usr/local/etc/LowjiConfig/*.cfg; do
-    # Kiểm tra và thực thi lệnh cho từng tệp
-    if [ -f "\$cfg_file" ]; then
-        "\$start_proxy_cmd" "\$cfg_file" || true
+    # Lấy tên tệp (không bao gồm đường dẫn)
+    filename=$(basename "\$cfg_file")
+
+    # Kiểm tra xem tệp có phần đuôi là "Expires.cfg" không
+    if [[ "\$filename" != *Expires.cfg ]]; then
+        # Kiểm tra và thực thi lệnh cho từng tệp
+        if [ -f "\$cfg_file" ]; then
+            "\$start_proxy_cmd" "\$cfg_file" || true
+        else
+            echo "Tệp \$cfg_file không tồn tại. Bỏ qua."
+        fi
     else
-        echo "Tệp \$cfg_file không tồn tại. Bỏ qua."
+        echo "Bỏ qua tệp \$cfg_file với phần đuôi Expires.cfg."
     fi
 done
+
+# Kết thúc đoạn mã kiểm tra và thực thi StartProxy
 EOF
 
 
