@@ -1,7 +1,7 @@
 #
 PASS=1
 
-gen_3proxy() {
+gen_proxy() {
     cat <<EOF
 daemon
 maxconn 2000
@@ -35,4 +35,4 @@ WORKDIR="/home/cloudfly"
 WORKDATA="${WORKDIR}/data.txt"
 echo "$PASS" > "${WORKDIR}/pass.txt"
 
-gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
+gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
