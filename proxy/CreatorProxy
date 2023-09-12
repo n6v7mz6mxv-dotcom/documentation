@@ -131,7 +131,8 @@ echo "LAST_PORT is $LAST_PORT. Continue..."
 gen_data >$WORKSET/$PROFILE/$PROFILE.txt
 gen_iptables >>$WORKDIR/boot_iptables.sh
 gen_ifconfig >>$WORKDIR/boot_ifconfig.sh
-
+gen_iptables >>$WORKSET/$PROFILE/$PROFILE.temp
+gen_ifconfig >>$WORKSET/$PROFILE/$PROFILE.temp
 
 gen_proxy >/usr/local/etc/LowjiConfig/$PROFILE.cfg
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
