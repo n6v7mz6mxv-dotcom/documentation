@@ -1,6 +1,7 @@
 Hansudung="2023-10-12"
 ID_Seller="null"
 ID_Khach="null"
+Names="null"
 
 # Lấy ngày hiện tại (định dạng YYYY-MM-DD)
 current_date=$(date +"%Y-%m-%d")
