@@ -1,0 +1,49 @@
+Hansudung="2023-10-12"
+ID_Seller="null"
+ID_Khach="null"
+Names="null"
+TOKEN="null"
+
+
+# Lấy ngày hiện tại (định dạng YYYY-MM-DD)
+current_date=$(date +"%Y-%m-%d")
+
+# Chuyển đổi ngày/tháng/năm hiện tại và ngày hết hạn thành định dạng số Unix
+current_unix=$(date -d "$current_date" +"%s")
+expiry_date=$(date -d "$Hansudung" +"%s")
+IP4=$(curl -4 -s icanhazip.com)
+        Info="$IP4"
+    if [ "$Names" != "null" ]; then
+        Info="$IP4 - khách: $Names"
+    fi
+# Tính số giây còn lại
+seconds_remaining=$((expiry_date - current_unix))
+
+# Tính số ngày còn lại bằng cách chia số giây cho 86400 (số giây trong một ngày)
+days_remaining=$((seconds_remaining / 86400))
+
+# Hàm gửi tin nhắn
+SendSms() {
+	CHAT_ID="$1"
+    MESSAGE="$2"
+    if [ "$TOKEN" != "null" ]; then
+    if [ "$CHAT_ID" != "null" ]; then
+        curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${MESSAGE}"
+    fi
+fi
+}
+
+# Kiểm tra xem nếu số ngày còn lại là số âm hoặc bằng 0
+if [ "$days_remaining" -eq 3 ]; then
+    SendSms "$ID_Khach" "Proxy của bạn sẽ hết hạn sau: $days_remaining ngày" # ID_Seller
+	SendSms "$ID_Seller" "Proxy VPS $Info sẽ hết hạn sau: $days_remaining ngày"
+	fi
+elif [ "$days_remaining" -eq 0 ]; then
+    SendSms "$ID_Khach" "Proxy của bạn đã bị khoá do hết hạn" && mv /usr/local/etc/3proxy/3proxy.cfg /usr/local/etc/3proxy/Expires.cfg
+	SendSms "$ID_Seller" "Đã khoá proxy VPS: $Info"
+elif [ "$days_remaining" -lt -6 ]; then
+    SendSms "$ID_Khach" "Proxy của bạn đã bị xoá do quá hạn 7 ngày" && rm -f /usr/local/etc/3proxy/Expires.cfg && rm "$0" # Thực hiện lệnh xoá dữ liệu ở đây
+	SendSms "$ID_Seller" "Proxy VPS: $Info đã bị xoá do quá 7 ngày k gia hạn"
+else
+    SendSms "Số ngày còn lại: $days_remaining ngày"
+fi
