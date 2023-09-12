@@ -85,8 +85,11 @@ gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
         echo "${USER_PORT}${port}/$(random)/$IP4/$port/$(gen64 $IP6)"
     done
-	V4Port=$((LAST_PORT + 1))
-	echo "${USER_PORT}${V4Port}/$(random)/$IP4/$V4Port/$IP4"
+
+    if [ -e "$FILE" ]; then
+        V4Port=$((LAST_PORT + 1))
+        echo "${USER_PORT}${V4Port}/$(random)/$IP4/$V4Port/$IP4"
+    fi
 }
 
 gen_iptables() {
