@@ -31,7 +31,7 @@ $(awk -F "/" -v PASS="$PASS" '{
 EOF
 }
 
-WORKDIR="/home/cloudfly"
+WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
 echo "$PASS" > "${WORKDIR}/pass.txt"
 
