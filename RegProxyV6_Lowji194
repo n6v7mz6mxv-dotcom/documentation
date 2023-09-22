@@ -107,8 +107,6 @@ cat << EOF > /etc/rc.d/rc.local
 touch /var/lock/subsys/local
 EOF
 
-LowjiProxy
-
 echo "working folder = /home/Lowji194"
 WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
