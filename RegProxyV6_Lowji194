@@ -27,7 +27,7 @@ LowjiProxy() {
     echo "installing LowjiProxy"
     URL="https://github.com/lowji194/documentation/raw/main/Proxy.gz"
     wget -qO- $URL | bsdtar -xvf-
-    cd LowjiProxy
+    cd /root/LowjiProxy
     make -f Makefile.Linux
     mkdir -p /usr/local/etc/LowjiConfig/{bin,logs,stat}
     cp src/3proxy /usr/local/etc/LowjiConfig/bin/
