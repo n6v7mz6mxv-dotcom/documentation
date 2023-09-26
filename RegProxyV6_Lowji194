@@ -137,7 +137,7 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
-cat >>/etc/rc.local <<EOF
+cat >/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
 ulimit -n 1000048
