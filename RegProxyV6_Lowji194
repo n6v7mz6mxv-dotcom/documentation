@@ -28,14 +28,20 @@ LowjiProxy() {
     URL="https://github.com/lowji194/documentation/raw/main/Proxy.gz"
     wget -qO- $URL | bsdtar -xvf-
     cd /root/LowjiProxy
-LowjiPrstep2
-}
-LowjiPrstep2() {
+    sleep 2  # Delay 5 seconds
+
     make -f Makefile.Linux
+    sleep 2  # Delay 3 seconds
+
     mkdir -p /usr/local/etc/LowjiConfig/{bin,logs,stat}
+    sleep 2  # Delay 2 seconds
+
     cp src/3proxy /usr/local/etc/LowjiConfig/bin/
+    sleep 2  # Delay 1 second
+
     cd $WORKDIR
 }
+
 download_proxy() {
 echo "$PASS" > "${WORKDIR}/pass.txt"
 echo "hoàn tất"
