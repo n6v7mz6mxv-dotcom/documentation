@@ -151,11 +151,11 @@ bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
 ulimit -n 1000048
 /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
 EOF
+chmod 0755 /etc/rc.local
+bash /etc/rc.local
 if [ "$VLAN" -eq 1 ]; then
     echo "sed -i 's/\r$//' ${WORKDIR}/VLAN.sh && bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
 fi
-chmod 0755 /etc/rc.local
-bash /etc/rc.local
 
 gen_proxy_file_for_user
 
