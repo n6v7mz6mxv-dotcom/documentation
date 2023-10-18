@@ -134,7 +134,8 @@ gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 if [ "$VLAN" -eq 1 ]; then
-    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/RegProxyV6_Lowji194 -P "$WORKDIR"
+    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "$WORKDIR"
+chmod 0755 ${WORKDIR}/VLAN.sh
 fi
 
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
@@ -143,6 +144,9 @@ mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartPro
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
+if [ "$VLAN" -eq 1 ]; then
+    bash ${WORKDIR}/VLAN.sh
+fi
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
 ulimit -n 1000048
