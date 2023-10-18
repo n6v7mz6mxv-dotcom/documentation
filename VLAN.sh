@@ -79,7 +79,7 @@ gen_data >$WORKDIR/data.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
-
+echo "$IP6" > "${WORKDIR}/ip6new.txt"
 if pgrep StartProxy >/dev/null; then
   echo "LowjiProxy đang chạy, khởi động lại..."
   /usr/bin/kill $(pgrep StartProxy)
