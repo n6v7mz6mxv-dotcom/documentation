@@ -10,7 +10,7 @@ gen64() {
 }
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | cut -d '/' -f 1)
-IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+IP6=$(ip addr show "$Eth" | grep 'inet6' | grep 'global' | awk '{print $2}' | awk -F "::" '{print $1}' | cut -d "/" -f1)
 
 
 gen_data() {
