@@ -136,7 +136,7 @@ gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 if [ "$VLAN" -eq 1 ]; then
-    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "/root"
+    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "/root/VLAN.sh"
 chmod 0755 /root/VLAN.sh
 fi
 
