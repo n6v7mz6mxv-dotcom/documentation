@@ -136,8 +136,9 @@ gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 if [ "$VLAN" -eq 1 ]; then
-    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "/root/VLAN.sh"
-chmod 0755 /root/VLAN.sh
+    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "${WORKDIR}"
+chmod 0755 ${WORKDIR}/VLAN.sh
+sed -i 's/\r$//' ${WORKDIR}/VLAN.sh
 fi
 
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
@@ -154,7 +155,7 @@ EOF
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
 if [ "$VLAN" -eq 1 ]; then
-    echo "sed -i 's/\r$//' /root/VLAN.sh && bash /root/VLAN.sh" >> /etc/rc.local
+    echo "bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
 fi
 
 gen_proxy_file_for_user
