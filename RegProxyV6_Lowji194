@@ -41,6 +41,8 @@ sleep 5
 
 download_proxy() {
 echo "$PASS" > "${WORKDIR}/pass.txt"
+echo "$IP4" > "${WORKDIR}/ip.txt"
+echo "$IP6" > "${WORKDIR}/ip6.txt"
 echo "hoàn tất"
 }
 gen_proxy() {
