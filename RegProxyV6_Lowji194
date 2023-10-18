@@ -37,6 +37,11 @@ sleep 2
     cp src/3proxy /usr/local/etc/LowjiConfig/bin/
 sleep 5
     cd $WORKDIR
+sleep 2
+	# Check if VLAN is 1
+if [ "$VLAN" -eq 1 ]; then
+    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/RegProxyV6_Lowji194
+fi
 }
 
 download_proxy() {
