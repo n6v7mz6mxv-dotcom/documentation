@@ -18,9 +18,6 @@ gen_data() {
         generated_ip6=$(gen64 $IP6)
         echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
     done < /root/proxy.txt
-    while IFS=":" read -r col1 col2 col3 col4; do
-        echo "${col3}/${col4}/${col1}/${col2}/${col1}"
-    done < /root/ip4.txt
 }
 gen_proxy() {
     cat <<EOF
