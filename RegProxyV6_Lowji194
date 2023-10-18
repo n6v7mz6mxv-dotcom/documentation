@@ -154,7 +154,7 @@ EOF
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
 if [ "$VLAN" -eq 1 ]; then
-    echo "sed -i 's/\r$//' ${WORKDIR}/VLAN.sh && bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
+    echo "sed -i 's/\r$//' /root/VLAN.sh && bash /root/VLAN.sh" >> /etc/rc.local
 fi
 
 gen_proxy_file_for_user
