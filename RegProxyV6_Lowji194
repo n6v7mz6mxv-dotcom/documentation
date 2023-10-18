@@ -102,7 +102,7 @@ EOF
 
 gen_ifconfig() {
     cat <<EOF
-$(awk -F "/" '{print "ifconfig ${Eth} inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
+$(awk -F "/" -v Eth="${Eth}" '{print "ifconfig " Eth " inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
 EOF
 }
 echo "installing net-tools"
