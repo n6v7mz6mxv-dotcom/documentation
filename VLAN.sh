@@ -72,13 +72,19 @@ else
     PASS=1
 fi
 
-gen_data >$WORKDIR/data.txt
-gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-gen_iptables >$WORKDIR/boot_iptables.sh
-gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
-echo "$IP6" > "${WORKDIR}/ip6new.txt"
+if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
+    # Nếu khác nhau, thực hiện các thao tác dưới đây
+gen_data > "${WORKDIR}/data.txt"
+gen_ifconfig > "${WORKDIR}/boot_ifconfig.sh"
+gen_iptables > "${WORKDIR}/boot_iptables.sh"
+gen_proxy > "/usr/local/etc/LowjiConfig/UserProxy.cfg"
+echo "$IP6" > "${WORKDIR}/ip6.txt"
+
 if pgrep StartProxy >/dev/null; then
-  echo "LowjiProxy đang chạy, khởi động lại..."
-  /usr/bin/kill $(pgrep StartProxy)
+    echo "LowjiProxy đang chạy, khởi động lại..."
+    /usr/bin/kill $(pgrep StartProxy)
 fi
+
 bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+
+fi
