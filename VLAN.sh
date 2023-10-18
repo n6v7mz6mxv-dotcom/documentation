@@ -1,0 +1,88 @@
+#!/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+array=(1 2 3 4 5 6 7 8 9 0 a b c d e f)
+gen64() {
+	ip64() {
+		echo "${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}"
+	}
+	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
+}
+Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
+IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | cut -d '/' -f 1)
+IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+
+
+gen_data() {
+    while IFS=":" read -r col1 col2 col3 col4; do
+        generated_ip6=$(gen64 $IP6)
+        echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
+    done < /root/proxy.txt
+    while IFS=":" read -r col1 col2 col3 col4; do
+        echo "${col3}/${col4}/${col1}/${col2}/${col1}"
+    done < /root/ip4.txt
+}
+gen_proxy() {
+    cat <<EOF
+daemon
+maxconn 2000
+nserver 1.1.1.1
+nserver 8.8.4.4
+nserver 2001:4860:4860::8888
+nserver 2001:4860:4860::8844
+nscache 65536
+timeouts 1 5 30 60 180 1800 15 60
+setgid 65535
+setuid 65535
+stacksize 6291456 
+flush
+auth strong
+
+users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
+
+
+$(awk -F "/" -v PASS="$PASS" '{
+    auth = (PASS == 1 || $3 == $5) ? "strong" : "none";
+    proxy_type = ($3 != $5) ? "-6" : "-4" ;
+    print "auth " auth;
+    print "allow  " $1;
+    print "proxy " proxy_type " -n -a -p" $4 " -i" $3 " -e" $5;
+    print "flush";
+}' ${WORKDATA})
+EOF
+}
+
+gen_ifconfig() {
+    cat <<EOF
+$(awk -F "/" -v Eth="${Eth}" '{print "ifconfig " Eth " inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
+EOF
+}
+gen_iptables() {
+    cat <<EOF
+    $(awk -F "/" '{print "iptables -I INPUT -p tcp --dport " $4 "  -m state --state NEW -j ACCEPT"}' ${WORKDATA}) 
+EOF
+}
+
+
+WORKDIR="/home/Lowji194"
+WORKDATA="${WORKDIR}/data.txt"
+# Kiểm tra xem file tồn tại hay không
+if [ -e "${WORKDIR}/pass.txt" ]; then
+    # Nếu file tồn tại, đọc giá trị từ file
+    PASS=$(cat "${WORKDIR}/pass.txt")
+else
+    # Nếu file không tồn tại, gán giá trị mặc định là 1
+    PASS=1
+fi
+
+gen_data >$WORKDIR/data.txt
+gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+gen_iptables >$WORKDIR/boot_iptables.sh
+gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
+echo "Xoay IP thành công"
+
+if pgrep StartProxy >/dev/null; then
+  echo "LowjiProxy đang chạy, khởi động lại..."
+  /usr/bin/kill $(pgrep StartProxy)
+fi
+bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
