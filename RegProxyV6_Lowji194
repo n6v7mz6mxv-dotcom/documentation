@@ -37,11 +37,6 @@ sleep 2
     cp src/3proxy /usr/local/etc/LowjiConfig/bin/
 sleep 5
     cd $WORKDIR
-sleep 2
-	# Check if VLAN is 1
-if [ "$VLAN" -eq 1 ]; then
-    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh
-fi
 }
 
 download_proxy() {
@@ -138,6 +133,9 @@ echo "LAST_PORT is $LAST_PORT. Continue..."
 gen_data >$WORKDIR/data.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+if [ "$VLAN" -eq 1 ]; then
+    curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/RegProxyV6_Lowji194 -P "$WORKDIR"
+fi
 
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
