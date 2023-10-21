@@ -14,10 +14,19 @@ IP6=$(ip addr show "$Eth" | grep 'inet6' | grep 'global' | awk '{print $2}' | aw
 
 
 gen_data() {
-    while IFS=":" read -r col1 col2 col3 col4; do
-        generated_ip6=$(gen64 $IP6)
-        echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
-    done < /root/proxy.txt
+while IFS=":" read -r col1 col2 col3 col4; do
+    unique_ipv6_list=()  # Mảng để lưu trữ các giá trị IPv6 duy nhất
+
+    seq $FIRST_PORT $LAST_PORT | while read port; do
+        ipv6="$(gen64 $IP6)"
+        while [[ " ${unique_ipv6_list[@]} " =~ " $ipv6 " ]]; do
+            ipv6="$(gen64 $IP6)"
+        done
+        unique_ipv6_list+=("$ipv6")
+
+        echo "${col3}/${col4}/${col1}/${col2}/${ipv6}"
+    done
+done < /root/proxy.txt
     while IFS=":" read -r col1 col2 col3 col4; do
         echo "${col3}/${col4}/${col1}/${col2}/${col1}"
     done < /root/ip4.txt
