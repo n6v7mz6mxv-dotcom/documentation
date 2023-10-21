@@ -89,8 +89,16 @@ EOF
 
 
 gen_data() {
+    unique_ipv6_list=()  # Mảng để lưu trữ các giá trị IPv6 duy nhất
+
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$(gen64 $IP6)"
+        ipv6="$(gen64 $IP6)"
+        while [[ " ${unique_ipv6_list[@]} " =~ " $ipv6 " ]]; do
+            ipv6="$(gen64 $IP6)"
+        done
+        unique_ipv6_list+=("$ipv6")
+
+        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$ipv6"
     done
 	V4Port=$((LAST_PORT + 1))
 	echo "${USER_PORT}${V4Port}/$(random)/$IP4/$V4Port/$IP4"
