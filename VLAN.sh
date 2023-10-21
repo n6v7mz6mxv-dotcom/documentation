@@ -13,10 +13,19 @@ IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | cut -d '/' -f 1)
 IP6=$(ip addr show "$Eth" | grep 'inet6' | grep 'global' | awk '{print $2}' | awk -F ":" '{print $1":"$2":"$3":"$4}' | head -n 1)
 
 gen_data() {
-    while IFS=":" read -r col1 col2 col3 col4; do
-        generated_ip6=$(gen64 $IP6)
-        echo "${col3}/${col4}/${col1}/${col2}/${generated_ip6}"
-    done < /root/proxy.txt
+while IFS=":" read -r col1 col2 col3 col4; do
+    unique_ipv6_list=()  # Mảng để lưu trữ các giá trị IPv6 duy nhất
+
+    seq $FIRST_PORT $LAST_PORT | while read port; do
+        ipv6="$(gen64 $IP6)"
+        while [[ " ${unique_ipv6_list[@]} " =~ " $ipv6 " ]]; do
+            ipv6="$(gen64 $IP6)"
+        done
+        unique_ipv6_list+=("$ipv6")
+
+        echo "${col3}/${col4}/${col1}/${col2}/${ipv6}"
+    done
+done < /root/proxy.txt
 }
 gen_proxy() {
     cat <<EOF
