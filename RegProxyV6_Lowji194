@@ -24,7 +24,6 @@ gen64() {
 	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
 LowjiProxy() {
-    echo "installing LowjiProxy" > /root/log.txt
     cd /root
 sleep 1
     URL="https://github.com/lowji194/documentation/raw/main/Proxy.gz"
