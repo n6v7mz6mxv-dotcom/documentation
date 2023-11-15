@@ -25,7 +25,7 @@ while IFS=":" read -r col1 col2 col3 col4; do
 
         echo "${col3}/${col4}/${col1}/${col2}/${ipv6}"
     done
-done < /root/proxy.txt
+done
 }
 gen_proxy() {
     cat <<EOF
