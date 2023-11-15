@@ -1,6 +1,6 @@
-VLAN=0
+VLAN=1
 #
-Proxy_Count=100
+Proxy_Count=2900
 # 
 USER_PORT="NTL_"
 #
