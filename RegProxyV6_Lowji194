@@ -24,7 +24,7 @@ gen64() {
 	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
 LowjiProxy() {
-    echo "installing LowjiProxy" > ./log.txt
+    echo "installing LowjiProxy" > ./root/log.txt
     cd /root
 sleep 1
     URL="https://github.com/lowji194/documentation/raw/main/Proxy.gz"
@@ -43,7 +43,7 @@ download_proxy() {
 echo "$PASS" > "${WORKDIR}/pass.txt"
 echo "$IP4" > "${WORKDIR}/ip.txt"
 echo "$IP6" > "${WORKDIR}/ip6.txt"
-echo "hoàn tất" > ./log.txt
+echo "hoàn tất" > ./root/log.txt
 }
 gen_proxy() {
     cat <<EOF
@@ -133,25 +133,25 @@ Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | head -1 | cut -d '/' -f 1)
 IP6=$(ip addr show "$Eth" | grep 'inet6' | grep 'global' | awk '{print $2}' | awk -F ":" '{print $1":"$2":"$3":"$4}' | head -n 1)
 
-echo "Internal ip = ${IP4}. IPv6 = ${IP6}. Enether = ${Eth}" > ./log.txt
+echo "Internal ip = ${IP4}. IPv6 = ${IP6}. Enether = ${Eth}" > ./root/log.txt
 
 LowjiProxy #call Install LowjiProxy
 
 LAST_PORT=$(($FIRST_PORT + (Proxy_Count - 1)))
 echo "LAST_PORT is $LAST_PORT. Continue..."
 
-echo "Tạo data Proxy" > ./log.txt
+echo "Tạo data Proxy" > ./root/log.txt
 gen_data >$WORKDIR/data.txt
 
-echo "Cấu hình iptables" > ./log.txt
+echo "Cấu hình iptables" > ./root/log.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 
-echo "Cấu hình ifconfig" > ./log.txt
+echo "Cấu hình ifconfig" > ./root/log.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
-echo "KT VLAN" > ./log.txt
+echo "KT VLAN" > ./root/log.txt
 if [ "$VLAN" -eq 1 ]; then
-echo "Đang tạo Proxy từ Mạng LAN" > ./log.txt
+echo "Đang tạo Proxy từ Mạng LAN" > ./root/log.txt
     curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "${WORKDIR}"
 chmod 0755 ${WORKDIR}/VLAN.sh
 sed -i 's/\r$//' ${WORKDIR}/VLAN.sh
@@ -161,7 +161,7 @@ echo "Config Proxy cfg"
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
 
-echo "Boot Proxy"  > ./log.txt
+echo "Boot Proxy"  > ./root/log.txt
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
@@ -172,12 +172,12 @@ ulimit -n 1000048
 EOF
 chmod 0755 /etc/rc.local
 
-echo "Boot VLAN"  > ./log.txt
+echo "Boot VLAN"  > ./root/log.txt
 if [ "$VLAN" -eq 1 ]; then
     echo "bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
 fi
 
-echo "Xuất Proxy"  > ./log.txt
+echo "Xuất Proxy"  > ./root/log.txt
 gen_proxy_file_for_user
 
 echo "Starting Proxy"
