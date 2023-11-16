@@ -114,7 +114,7 @@ gen_ifconfig() {
 $(awk -F "/" -v Eth="${Eth}" '{print "ifconfig " Eth " inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
 EOF
 }
-echo "installing net-tools"
+echo "installing net-tools"  > /root/log.txt
 yum -y install wget gcc net-tools bsdtar zip >/dev/null
 
 cat << EOF > /etc/rc.d/rc.local
@@ -139,28 +139,28 @@ LowjiProxy #call Install LowjiProxy
 LAST_PORT=$(($FIRST_PORT + (Proxy_Count - 1)))
 echo "LAST_PORT is $LAST_PORT. Continue..."
 
-echo "Tạo data Proxy"
+echo "Tạo data Proxy"  > /root/log.txt
 gen_data >$WORKDIR/data.txt
 
-echo "Cấu hình iptables"
+echo "Cấu hình iptables"  > /root/log.txt
 gen_iptables >$WORKDIR/boot_iptables.sh
 
-echo "Cấu hình ifconfig"
+echo "Cấu hình ifconfig"  > /root/log.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
 echo "KT VLAN"
 if [ "$VLAN" -eq 1 ]; then
-echo "Đang tạo Proxy từ Mạng LAN"
+echo "Đang tạo Proxy từ Mạng LAN"  > /root/log.txt
     curl -sO https://raw.githubusercontent.com/lowji194/documentation/main/VLAN.sh -P "${WORKDIR}"
 chmod 0755 ${WORKDIR}/VLAN.sh
 sed -i 's/\r$//' ${WORKDIR}/VLAN.sh
 fi
 
-echo "Config Proxy cfg"
+echo "Config Proxy cfg"  > /root/log.txt
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
 
-echo "Boot Proxy" 
+echo "Boot Proxy"  > /root/log.txt
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
@@ -171,13 +171,13 @@ ulimit -n 1000048
 EOF
 chmod 0755 /etc/rc.local
 
-echo "Boot VLAN" 
+echo "Boot VLAN"   > /root/log.txt
 if [ "$VLAN" -eq 1 ]; then
     echo "bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
 fi
 
-echo "Xuất Proxy" 
+echo "Xuất Proxy" > /root/log.txt
 gen_proxy_file_for_user
 
-echo "Starting Proxy"
+echo "Starting Proxy" > /root/log.txt
 download_proxy
