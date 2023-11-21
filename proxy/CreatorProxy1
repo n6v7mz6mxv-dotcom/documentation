@@ -24,7 +24,7 @@ gen64() {
 	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
 LowjiProxy() {
-    echo "installing LowjiProxy"
+    echo "installing LowjiProxy" > /root/log.txt
     URL="https://github.com/lowji194/documentation/raw/main/Proxy.gz"
     wget -qO- $URL | bsdtar -xvf-
     cd /root/LowjiProxy
@@ -36,7 +36,7 @@ LowjiProxy() {
 download_proxy() {
 echo "$PASS" > "${WORKSET}/${PROFILE}/pass.txt"
 echo "$((LAST_PORT + 1))" > "${WORKSET}/first.txt"
-echo "hoàn tất"
+echo "hoàn tất"  > /root/log.txt
 }
 gen_proxy() {
     cat <<EOF
@@ -94,7 +94,7 @@ gen_ifconfig() {
 $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
-echo "installing net-tools"
+echo "installing net-tools" > /root/log.txt
 yum -y install wget gcc net-tools bsdtar zip >/dev/null
 
 cat << EOF > /etc/rc.d/rc.local
@@ -107,7 +107,7 @@ LowjiProxy
 IP4=$(curl -4 -s icanhazip.com)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
-echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
+echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}" > /root/log.txt
 
 echo "working folder = /home/Lowji194"
 WORKDIR="/home/Lowji194"
@@ -128,13 +128,22 @@ fi
 LAST_PORT=$(($FIRST_PORT + (Proxy_Count - 1)))
 echo "LAST_PORT is $LAST_PORT. Continue..."
 
+echo "Tạo data Proxy"  > /root/log.txt
 gen_data >$WORKSET/$PROFILE/$PROFILE.txt
+
+echo "Cấu hình iptables"  > /root/log.txt
 gen_iptables >>$WORKDIR/boot_iptables.sh
+
+echo "Cấu hình ifconfig"  > /root/log.txt
 gen_ifconfig >>$WORKDIR/boot_ifconfig.sh
+
 gen_iptables >>$WORKSET/$PROFILE/$PROFILE.temp
 gen_ifconfig >>$WORKSET/$PROFILE/$PROFILE.temp
 
+echo "Config Proxy cfg"  > /root/log.txt
 gen_proxy >/usr/local/etc/LowjiConfig/$PROFILE.cfg
+
+echo "Boot Proxy"  > /root/log.txt
 mv /usr/local/etc/LowjiConfig/bin/3proxy /usr/local/etc/LowjiConfig/bin/StartProxy
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
@@ -170,6 +179,7 @@ EOF
 chmod 0755 /etc/rc.local
 bash /etc/rc.local
 
+echo "Xuất Proxy" > /root/log.txt
 gen_proxy_file_for_user
 
 echo "Starting Proxy"
