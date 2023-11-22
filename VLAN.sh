@@ -13,20 +13,17 @@ IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | head -1 | cut -d '/' -f 1
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 gen_data() {
-    total_lines=$(wc -l < /root/proxy.txt)  # Đếm tổng số dòng trong tệp proxy.txt
+	ipv6_list=()
 
     while IFS=":" read -r col1 col2 col3 col4; do
-        unique_ipv6_list=()  # Mảng để lưu trữ các giá trị IPv6 duy nhất
+        ipv6="$(gen64 $IP6)"
 
-        for ((i=1; i<=total_lines; i++)); do
+        while [[ " ${ipv6_list[@]} " =~ " $ipv6 " ]]; do
             ipv6="$(gen64 $IP6)"
-            while [[ " ${unique_ipv6_list[@]} " =~ " $ipv6 " ]]; do
-                ipv6="$(gen64 $IP6)"
-            done
-            unique_ipv6_list+=("$ipv6")
-
-            echo "${col3}/${col4}/${col1}/${col2}/${ipv6}"
         done
+        ipv6_list+=("$ipv6")
+
+        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$ipv6"
     done < /root/proxy.txt
 }
 gen_proxy() {
