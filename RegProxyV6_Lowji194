@@ -166,10 +166,12 @@ echo "Boot Proxy"  > /root/log.txt
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
+echo "Boot Services Proxy"
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
 ulimit -n 1000048
 /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+echo "Boot Services Proxy Complete"
 EOF
 chmod 0755 /etc/rc.local
 
