@@ -148,6 +148,7 @@ gen_iptables >$WORKDIR/boot_iptables.sh
 
 echo "Cấu hình ifconfig"  > /root/log.txt
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+chmod +x boot_*.sh /etc/rc.local
 
 echo "KT VLAN"
 if [ "$VLAN" -eq 1 ]; then
@@ -171,6 +172,7 @@ ulimit -n 1000048
 /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
 EOF
 chmod 0755 /etc/rc.local
+bash /etc/rc.local
 
 echo "Boot VLAN"   > /root/log.txt
 if [ "$VLAN" -eq 1 ]; then
