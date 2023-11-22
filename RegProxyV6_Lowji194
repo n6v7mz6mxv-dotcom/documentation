@@ -173,13 +173,8 @@ ulimit -n 1000048
 EOF
 chmod 0755 /etc/rc.local
 
-if pgrep StartProxy >/dev/null; then
-  echo "LowjiProxy đang chạy, khởi động lại..."
-  /usr/bin/kill $(pgrep StartProxy)
-fi
-
 echo "Starting Proxy" > /root/log.txt
-bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+bash /etc/rc.local
 
 echo "Boot VLAN"   > /root/log.txt
 if [ "$VLAN" -eq 1 ]; then
