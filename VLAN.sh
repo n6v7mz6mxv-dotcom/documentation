@@ -76,9 +76,12 @@ fi
 
 if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
     # Nếu khác nhau, thực hiện các thao tác dưới đây
-gen_data > "${WORKDIR}/data.txt"
-gen_ifconfig > "${WORKDIR}/boot_ifconfig.sh"
-gen_proxy > "/usr/local/etc/LowjiConfig/UserProxy.cfg"
+    
+echo "Gen Proxy"
+gen_data >$WORKDIR/data.txt
+
+echo "Config Proxy"
+gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 echo "$IP6" > "${WORKDIR}/ip6.txt"
 
 echo "Boot Proxy"
