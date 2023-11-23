@@ -23,7 +23,7 @@ gen_data() {
         done
         ipv6_list+=("$ipv6")
 
-        echo "${USER_PORT}${port}/$(random)/$IP4/$port/$ipv6"
+        echo "${col3}/${col4}/${col1}/${col2}/$ipv6"
     done < /root/proxy.txt
 }
 gen_proxy() {
