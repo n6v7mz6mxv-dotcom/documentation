@@ -81,4 +81,15 @@ gen_ifconfig > "${WORKDIR}/boot_ifconfig.sh"
 gen_proxy > "/usr/local/etc/LowjiConfig/UserProxy.cfg"
 echo "$IP6" > "${WORKDIR}/ip6.txt"
 
-bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null && ulimit -n 1000048 && /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+echo "Boot Proxy"
+bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null
+
+echo "Restart Proxy Services"
+if pgrep StartProxy >/dev/null; then
+  echo "LowjiProxy đang chạy, khởi động lại..."
+  /usr/bin/kill $(pgrep StartProxy)
+fi
+echo "Start Proxy Services"
+ulimit -n 1000048
+/usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+echo "Rotate IP Succces"
