@@ -127,6 +127,7 @@ WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
 mkdir $WORKDIR && cd $_
 
+LowjiProxy #call Install LowjiProxy
 
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 sleep 2
@@ -134,8 +135,6 @@ IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | head -1 | cut -d '/' -f 1
 IP6=$(ip addr show "$Eth" | grep 'inet6' | grep 'global' | awk '{print $2}' | awk -F ":" '{print $1":"$2":"$3":"$4}' | head -n 1)
 
 echo "Internal ip = ${IP4}. IPv6 = ${IP6}. Enether = ${Eth}"
-
-LowjiProxy #call Install LowjiProxy
 
 LAST_PORT=$(($FIRST_PORT + (Proxy_Count - 1)))
 echo "LAST_PORT is $LAST_PORT. Continue..."
