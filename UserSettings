@@ -35,13 +35,15 @@ WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
 echo "$PASS" > "${WORKDIR}/pass.txt"
 
+echo "Config Proxy cfg"  > /root/log.txt
 gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 
-echo "Restart Proxy Services"
+echo "Restart Proxy Services"  > /root/log.txt
 if pgrep StartProxy >/dev/null; then
   echo "LowjiProxy đang chạy, khởi động lại..."
   /usr/bin/kill $(pgrep StartProxy)
 fi
-echo "Start Proxy Services"
+echo "Start Proxy Services"  > /root/log.txt
 ulimit -n 1000048
 /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+echo "hoàn thành"  > /root/log.txt
