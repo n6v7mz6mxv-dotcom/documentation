@@ -82,6 +82,8 @@ gen_data >$WORKDIR/data.txt
 echo "Config Proxy"
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
+echo "Config Proxy cfg"  > /root/log.txt
+gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 
 echo "Boot Proxy"
 bash /home/Lowji194/boot_ifconfig.sh 2>/dev/null
