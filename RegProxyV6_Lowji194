@@ -166,12 +166,33 @@ cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
 echo "Boot Services Proxy"
+
+startProxy() {
+  ulimit -n 1000048
+  /usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+}
+
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh 2>/dev/null
-ulimit -n 1000048
-/usr/local/etc/LowjiConfig/bin/StartProxy /usr/local/etc/LowjiConfig/UserProxy.cfg
+
+echo "Start Proxy Services"
+startProxy
+
+# Vòng lặp kiểm tra StartProxy đã khởi động hay chưa
+while true; do
+  if pgrep StartProxy >/dev/null; then
+    echo "StartProxy đã hoạt động."
+    break  # Thoát khỏi vòng lặp nếu StartProxy đã khởi động
+  else
+    echo "StartProxy chưa hoạt động, thử khởi động lại..."
+    startProxy
+    sleep 5  # Chờ 5 giây trước khi kiểm tra lại
+  fi
+done
+
 echo "Boot Services Proxy Complete"
 EOF
+
 chmod 0755 /etc/rc.local
 
 echo "Start Proxy Services" > /root/log.txt
