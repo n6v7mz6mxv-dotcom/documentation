@@ -7,8 +7,6 @@ USER_PORT="NTL_"
 FIRST_PORT=10001
 #
 PASS=1
-#
-IP4=$(curl -4 -s icanhazip.com)
 
 #!/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
