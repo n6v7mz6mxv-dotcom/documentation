@@ -12,6 +12,21 @@ Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 IP4=$(ip addr show "$Eth" | awk '/inet / {print $2}' | head -1 | cut -d '/' -f 1)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
+# Lặp cho đến khi IP6 không còn trống
+while [ -z "$IP6" ]; do
+    # Restart network nếu IP6 trống
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run this script as root or with sudo."
+        exit 1
+    fi
+    
+    service network restart
+    sleep 10 # Đợi 10 giây
+    
+    # Lấy IP6 sau khi khởi động lại mạng
+    IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+done
+
 gen_data() {
 	ipv6_list=()
 
