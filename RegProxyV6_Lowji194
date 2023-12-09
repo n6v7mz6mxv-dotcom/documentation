@@ -165,6 +165,14 @@ echo "Boot Proxy"  > /root/log.txt
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 touch /var/lock/subsys/local
+EOF
+
+echo "Boot VLAN"   > /root/log.txt
+if [ "$VLAN" -eq 1 ]; then
+    echo "bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
+fi
+
+cat >>/etc/rc.local <<EOF
 echo "Boot Services Proxy"
 
 startProxy() {
@@ -197,11 +205,6 @@ chmod 0755 /etc/rc.local
 
 echo "Start Proxy Services" > /root/log.txt
 bash /etc/rc.local
-
-echo "Boot VLAN"   > /root/log.txt
-if [ "$VLAN" -eq 1 ]; then
-    echo "bash ${WORKDIR}/VLAN.sh" >> /etc/rc.local
-fi
 
 echo "Xuất Proxy" > /root/log.txt
 gen_proxy_file_for_user
