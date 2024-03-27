@@ -44,7 +44,7 @@ download_proxy() {
 echo "$PASS" > "${WORKDIR}/pass.txt"
 echo "$IP4" > "${WORKDIR}/ip.txt"
 echo "$IP6" > "${WORKDIR}/ip6.txt"
-echo "hoàn tất"  > /root/log.txt
+echo "Success RegProxy By Lợi Nguyễn"  > /root/log.txt
 rm -rf /root/LowjiProxy
 }
 gen_proxy() {
