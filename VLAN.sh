@@ -95,8 +95,11 @@ if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
 echo "Gen Proxy"
 gen_data >$WORKDIR/data.txt
 
+echo "Config Proxy cfg"
+gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
 echo "Config Proxy"
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+
 echo "$IP6" > "${WORKDIR}/ip6.txt"
 
 
