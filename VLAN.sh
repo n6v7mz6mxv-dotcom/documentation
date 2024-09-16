@@ -44,29 +44,20 @@ gen_data() {
 gen_proxy() {
     cat <<EOF
 daemon
-maxconn 2000
 nserver 1.1.1.1
 nserver 8.8.4.4
 nserver 2001:4860:4860::8888
 nserver 2001:4860:4860::8844
-nscache 65536
-timeouts 1 5 30 60 180 1800 15 60
-setgid 65535
-setuid 65535
-stacksize 6291456 
-flush
-auth strong
 
-users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
-
-
-$(awk -F "/" -v PASS="$PASS" '{
-    auth = (PASS == 1 || $3 == $5) ? "strong" : "none";
-    proxy_type = ($3 != $5) ? "-6" : "-4" ;
+$(awk -F "/" -v PASS="$PASS" '
+{
+    auth = (PASS == 1) ? "strong" : "none";
+    proxy_type = ($3 != $5) ? "-6" : "-4";
     print "auth " auth;
-    print "allow  " $1;
+    print "allow " $1;
+    print "users " $1 ":CL:" $2;
     print "proxy " proxy_type " -n -a -p" $4 " -i" $3 " -e" $5;
-    print "flush";
+    print "";
 }' ${WORKDATA})
 EOF
 }
