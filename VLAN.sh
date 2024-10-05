@@ -20,7 +20,11 @@ while [ -z "$IP6" ]; do
         exit 1
     fi
     
-    service network restart
+	if [ -f /etc/almalinux-release ]; then
+		sudo systemctl restart NetworkManager
+	else
+		service network restart
+	fi
     sleep 10 # Đợi 10 giây
     
     # Lấy IP6 sau khi khởi động lại mạng
@@ -80,19 +84,27 @@ else
     PASS=1
 fi
 
-if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
-    # Nếu khác nhau, thực hiện các thao tác dưới đây
-    
-echo "Gen Proxy"
-gen_data >$WORKDIR/data.txt
-
-echo "Config Proxy cfg"
-gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
-echo "Config Proxy"
-gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-
-echo "$IP6" > "${WORKDIR}/ip6.txt"
-
-
-echo "Rotate IP Succces"
+if [ "$IP4" != "$(cat ${WORKDIR}/ip.txt)" ]; then
+    ip4_value=$(cat ${WORKDIR}/ip.txt)
+    sed -i "s/${ip4_value}/$IP4/g" /root/proxy.txt
+	sed -i "s/${ip4_value}/$IP4/g" /usr/local/etc/LowjiConfig/UserProxy.cfg
+	echo "$IP4" > "${WORKDIR}/ip.txt"
 fi
+
+if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
+
+
+    echo "Gen Proxy"
+    gen_data >$WORKDIR/data.txt
+
+    echo "Config Proxy cfg"
+    gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
+    
+    echo "Config Proxy"
+    gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+
+    echo "$IP6" > "${WORKDIR}/ip6.txt"
+
+    echo "Rotate IP Success"
+fi
+
