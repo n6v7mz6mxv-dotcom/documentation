@@ -66,9 +66,9 @@ $(awk -F "/" -v PASS="$PASS" '
 EOF
 }
 
-gen_ifconfig() {
+gen_ip_a() {
     cat <<EOF
-$(awk -F "/" -v Eth="${Eth}" '{print "ifconfig " Eth " inet6 add " $5 "/64"}' ${WORKDATA} | sed '$d')
+$(awk -F "/" -v Eth="${Eth}" '{print "ip -6 addr add " $5 "/64 dev " Eth}' ${WORKDATA} | sed '$d')
 EOF
 }
 
@@ -101,7 +101,7 @@ if [ "$IP6" != "$(cat ${WORKDIR}/ip6.txt)" ]; then
     gen_proxy >/usr/local/etc/LowjiConfig/UserProxy.cfg
     
     echo "Config Proxy"
-    gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+    gen_ip_a >$WORKDIR/boot_ip.sh
 
     echo "$IP6" > "${WORKDIR}/ip6.txt"
 
