@@ -1,6 +1,9 @@
 #!/bin/bash
 
+Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
+IP4=$(ip addr show | grep 'inet ' | awk '{print $2}' | cut -d '/' -f 1 | sort -t '.' -k 4,4nr | head -n 1)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
+
 WORKDIR="/home/Lowji194"
 WORKDATA="${WORKDIR}/data.txt"
 BOOT_IP_SCRIPT="${WORKDIR}/boot_ip.sh"
