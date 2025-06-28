@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# ===== MÀU MÈ LOG =====
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 RED='\033[1;31m'
@@ -18,7 +17,6 @@ INCLUDES=(
     "/etc/systemd/system/botmailserver.service"
 )
 
-# ===== GHI MOTD =====
 function set_motd() {
 cat << 'EOF' | sudo tee /etc/motd
 ####################################################################
